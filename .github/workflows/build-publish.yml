@@ -55,7 +55,7 @@ jobs:
     - name: Ensure GitHub NuGet Source
       continue-on-error: true
       run: |
-       cd src
+       cd ${{ env.PACKAGE_PATH }}
        dotnet nuget add source ${{ env.PACKAGE_URL }} \
        -n ${{env.NUGET_SOURCE_NAME}} \
        -u bpfoster85 \
@@ -64,7 +64,7 @@ jobs:
        
     - name: GitHub Package Registry Tool Install
       run: |
-       cd src
+       cd ${{ env.PACKAGE_PATH }}
        dotnet tool install --global --verbosity minimal --no-cache gpr 
        
     - name: NuGet Push with GPR
