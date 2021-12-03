@@ -66,12 +66,6 @@ jobs:
        cd src
        dotnet tool install --global --verbosity minimal --no-cache gpr 
        
-  #  - name: Delete old Package
-  #    uses: actions/delete-package-versions@v1.0.3
-  #    continue-on-error: true
-  #    with:
-  #      package-name: 'proju.nuget.cosmos'
-        
     - name: NuGet Push with GPR
       run: |
        pushd 'src/nuget-packages/'
