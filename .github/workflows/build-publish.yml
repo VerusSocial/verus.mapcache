@@ -69,7 +69,7 @@ jobs:
        
     - name: NuGet Push with GPR
       run: |
-       pushd 'src/nuget-packages/'
+       pushd '${{ env.PACKAGE_PATH }}/nuget-packages/'
        gpr push \
        --api-key ${{ secrets.GITHUB_TOKEN }} \
        --repository ${{ github.repository }} \
