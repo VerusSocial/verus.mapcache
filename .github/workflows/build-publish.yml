@@ -10,7 +10,7 @@ env:
   DOTNET_VERSION: '6.0.x' 
   PACKAGE_PATH: 'bpfoster85.utility'
   PACKAGE_URL: 'https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json'
-  NUGET_SOURCE_NAME: "github_package_src"
+  NUGET_SOURCE_NAME: "github_package_src_mapcache"
   "SLNNAME": "bpfoster85.utility.sln"
   "CSPROJNAME": "bpfoster85.utility.csproj"
 jobs:
