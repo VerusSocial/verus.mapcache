@@ -8,7 +8,7 @@ on:
     
 env:
   DOTNET_VERSION: '6.0.x' 
-  PACKAGE_PATH: './bpfoster85.utility'
+  PACKAGE_PATH: 'bpfoster85.utility'
   PACKAGE_URL: 'https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json'
   NUGET_SOURCE_NAME: "github_package_src"
   "SLNNAME": "bpfoster85.utility.sln"
@@ -37,7 +37,7 @@ jobs:
       
     - name: Build
       run: |
-       cd bpfoster85.utility
+       cd ${{ env.PACKAGE_PATH }}
        dotnet restore
        dotnet build ${{ env.SLNNAME }} --configuration Release
        
@@ -48,7 +48,7 @@ jobs:
 
     - name: Pack with dotnet
       run: |
-       cd src
+       cd ${{ env.PACKAGE_PATH }}
        dotnet pack ${{ env.CSPROJNAME }} --output nuget-packages  --configuration Release -p:PackageVersion=1.0.${{ github.run_number }}
       # dotnet pack proju.nuget.cosmos.csproj --output nuget-packages  --configuration Release --version-suffix "-ci-$GITHUB_RUN_ID"
         
