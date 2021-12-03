@@ -1,0 +1,82 @@
+name: Github - publish package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    
+env:
+  DOTNET_VERSION: '6.0.x' 
+  PACKAGE_PATH: './bpfoster85.utility'
+  PACKAGE_URL: 'https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json'
+  NUGET_SOURCE_NAME: "github_package_src"
+  "SLNNAME": "bpfoster85.utility.sln"
+  "CSPROJNAME": "bpfoster85.utility.csproj"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@main
+    
+    - name: Cleanup
+      if: always()
+      continue-on-error: true
+      run: |
+       dotnet nuget remove source ${{ env.NUGET_SOURCE_NAME }}
+       
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        include-prerelease: true
+        source-url: "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      
+    - name: Build
+      run: |
+       dotnet restore
+       dotnet build ${{ env.SLNNAME }} --configuration Release
+       
+   # Commented out until we have funds to pay for cosmos compute in the cloud    
+   # - name: Test
+   #   run: |
+   #    dotnet test proju.nuget.cosmos.sln --no-build --verbosity normal
+
+    - name: Pack with dotnet
+      run: |
+       cd src
+       dotnet pack ${{ env.CSPROJNAME }} --output nuget-packages  --configuration Release -p:PackageVersion=1.0.${{ github.run_number }}
+      # dotnet pack proju.nuget.cosmos.csproj --output nuget-packages  --configuration Release --version-suffix "-ci-$GITHUB_RUN_ID"
+        
+    - name: Ensure GitHub NuGet Source
+      continue-on-error: true
+      run: |
+       cd src
+       dotnet nuget add source ${{ env.PACKAGE_URL }} \
+       -n ${{env.NUGET_SOURCE_NAME}} \
+       -u bpfoster85 \
+       -p ${{ secrets.PACKAGE_PASS }} \
+       --store-password-in-clear-text
+       
+    - name: GitHub Package Registry Tool Install
+      run: |
+       cd src
+       dotnet tool install --global --verbosity minimal --no-cache gpr 
+       
+  #  - name: Delete old Package
+  #    uses: actions/delete-package-versions@v1.0.3
+  #    continue-on-error: true
+  #    with:
+  #      package-name: 'proju.nuget.cosmos'
+        
+    - name: NuGet Push with GPR
+      run: |
+       pushd 'src/nuget-packages/'
+       gpr push \
+       --api-key ${{ secrets.GITHUB_TOKEN }} \
+       --repository ${{ github.repository }} \
+       --retries 3 \
+       *.nupkg    
