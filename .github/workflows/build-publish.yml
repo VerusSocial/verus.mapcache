@@ -37,6 +37,7 @@ jobs:
       
     - name: Build
       run: |
+       cd bpfoster85.utility
        dotnet restore
        dotnet build ${{ env.SLNNAME }} --configuration Release
        
