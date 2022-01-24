@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bpfoster85.utlity.MapCache
+namespace Verus.Utlity.MapCache
 {
     public static class MapCache
     {
