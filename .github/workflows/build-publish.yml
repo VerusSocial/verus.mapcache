@@ -8,11 +8,11 @@ on:
     
 env:
   DOTNET_VERSION: '6.0.x' 
-  PACKAGE_PATH: 'bpfoster85.utility'
+  PACKAGE_PATH: 'verus.utility'
   PACKAGE_URL: 'https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json'
   NUGET_SOURCE_NAME: "github_package_src_mapcache"
-  "SLNNAME": "bpfoster85.utility.sln"
-  "CSPROJNAME": "bpfoster85.utility.csproj"
+  "SLNNAME": "verus.utility.sln"
+  "CSPROJNAME": "verus.utility.csproj"
 jobs:
   build:
     runs-on: ubuntu-latest
